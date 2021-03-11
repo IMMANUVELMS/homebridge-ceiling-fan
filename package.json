@@ -1,0 +1,16 @@
+{
+  "name": "homebridge-ceiling-fan",
+  "version": "1.0.0",
+  "description": "Homebridge Ceiling Fan Accessory",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "fan",
+    "ceiling-fan",
+    "dummyfan"
+  ],
+  "author": "Immanuvel",
+  "license": "ISC"
+}
