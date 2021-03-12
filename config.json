@@ -8,6 +8,22 @@
             "name": {
                 "title": "Name",
                 "type": "string",
+				"fan_name":"Ceiling Fan",
+                "required": true
+            },
+			"onLink": {
+                "title": "onLink",
+                "type": "string",
+                "required": true
+            },
+			"onLink": {
+                "title": "offLink",
+                "type": "string",
+                "required": true
+            },
+			"onLink": {
+                "title": "statusLink",
+                "type": "string",
                 "required": true
             }
         }

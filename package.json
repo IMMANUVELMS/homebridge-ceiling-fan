@@ -1,16 +1,32 @@
 {
   "name": "homebridge-ceiling-fan",
-  "version": "1.0.0",
+  "version": "1.0.13",
   "description": "Homebridge Ceiling Fan Accessory",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/immanuvelms/homebridge-ceiling-fan.git"
+  },
   "keywords": [
     "fan",
+    "homebridge-plugin",
     "ceiling-fan",
     "dummyfan"
   ],
+  "engines": {
+    "node": ">=6.4.0",
+    "homebridge": ">=0.3.0"
+  },
+  "dependencies": {
+    "axios": "~0.20.0"
+  },
   "author": "Immanuvel",
-  "license": "ISC"
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/immanuvelms/homebridge-ceiling-fan/issues"
+  },
+  "homepage": "https://github.com/immanuvelms/homebridge-ceiling-fan#readme"
 }

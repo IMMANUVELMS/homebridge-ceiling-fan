@@ -2,6 +2,9 @@
 
 var Service, Characteristic, HomebridgeAPI;
 
+const httpreq = require("axios");
+
+
 module.exports = function(homebridge) {
 
   Service = homebridge.hap.Service;
@@ -15,36 +18,79 @@ module.exports = function(homebridge) {
 function CeilingFan(log, config) {
   this.log = log;
   this.name = config.name;
-  this._service = new Service.Fan(this.name);
-  this._service.getCharacteristic(Characteristic.On)
-    .on('set', this._setOn.bind(this));
+  this.onLink = config.onLink;
+  this.offLink = config.offLink;
+  this.statusLink = config.statusLink;
+  this.fanName= config["fan_name"] || this.name;
+  this.fanState = false;
+  this.log("Starting a fan  with name '" + this.fanName + "'...");
 
-	this.informationService = new Service.AccessoryInformation();
-		this.informationService
-			.setCharacteristic(Characteristic.Manufacturer, 'CaptainRover')
-			.setCharacteristic(Characteristic.Model, 'Ceiling Fan')
-			.setCharacteristic(Characteristic.FirmwareRevision, '1.0.0')
-			.setCharacteristic(Characteristic.SerialNumber, this.name.replace(/\s/g, '').toUpperCase());
+}
+CeilingFan.prototype.getPowerOn = function(callback) {
+	
+  httpreq.get(this.statusLink)
+  .then(response => {
+    
+	//this.log(response.data);
+	if(response.data == "ON" || response.data == "1"){
+		this.log("'%s' status is ON",this.fanName);
+		this.fanState = true;
+	}else if(response.data == "OFF" || response.data == "0"){
+		this.log("'%s' status is OFF",this.fanName);
+		this.fanState = false;
+	}else{
+		this.log("The Fan accessory returns Invalid data");
+	}
+		
+   
+  })
+  .catch(error => {
+    this.log(error);
+  });	
+  var powerOn = this.fanState > 0;
+  //this.log("Power state for the '%s' is %s", this.fanName, this.fanState);
+  callback(null, powerOn);
+}
 
+CeilingFan.prototype.setPowerOn = function(powerOn, callback) {
+	
+if(powerOn){	
+	  httpreq.get(this.onLink)
+	  .then(response => {
+		//this.log(response.data);
+		if(response.data == "ON" || response.data == "1"){
+		this.log("'%s' is set to ON",this.fanName);
+		this.fanState = true;
+	}
+	  })
+	  .catch(error => {
+		this.log(error);
+	  });}
+  else{
+	 httpreq.get(this.offLink)
+  .then(response => {
+    //this.log(response.data);
+    if(response.data == "OFF" || response.data == "0"){
+		this.log("'%s' is set to OFF",this.fanName);
+		this.fanState = false;
+	}
+  })
+  .catch(error => {
+    this.log(error);
+  }); 
+  }	
+  //this.log("Set power state on the '%s' to %s", this.fanName, this.fanState);
+  callback(null);
 }
 
 CeilingFan.prototype.getServices = function() {
-  return [this.informationService,this._service];
+    var fanService = new Service.Fan(this.name);
+    
+    fanService
+      .getCharacteristic(Characteristic.On)
+      .on('get', this.getPowerOn.bind(this))
+      .on('set', this.setPowerOn.bind(this));
+    
+    return [fanService];
 }
 
-CeilingFan.prototype._setOn = function(on, callback) {
-
-  this.log("Setting switch to " + on);
-  
-    if (on) {
-    this._service.setCharacteristic(Characteristic.On, false);
-    
-  } else if (!on ) {
-    
-      this._service.setCharacteristic(Characteristic.On, true);
-   
-  }
-
-  callback();
-  
-}
