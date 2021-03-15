@@ -35,9 +35,11 @@ CeilingFan.prototype.getPowerOn = function(callback) {
 	if(response.data == "ON" || response.data == "1"){
 		this.log("'%s' status is ON",this.fanName);
 		this.fanState = true;
+		callback(null, this.fanState);
 	}else if(response.data == "OFF" || response.data == "0"){
 		this.log("'%s' status is OFF",this.fanName);
 		this.fanState = false;
+		callback(null, this.fanState);
 	}else{
 		this.log("The Fan accessory returns Invalid data");
 	}
@@ -45,11 +47,10 @@ CeilingFan.prototype.getPowerOn = function(callback) {
    
   })
   .catch(error => {
-    this.log(error);
+    this.log("%s is unreachable",this.fanName);
+	callback(error);
   });	
-  var powerOn = this.fanState > 0;
-  //this.log("Power state for the '%s' is %s", this.fanName, this.fanState);
-  callback(null, powerOn);
+
 }
 
 CeilingFan.prototype.setPowerOn = function(powerOn, callback) {
@@ -76,7 +77,8 @@ if(powerOn){
 	}
   })
   .catch(error => {
-    this.log(error);
+    this.log("%s is unreachable",this.fanName);
+	callback(error);
   }); 
   }	
   //this.log("Set power state on the '%s' to %s", this.fanName, this.fanState);

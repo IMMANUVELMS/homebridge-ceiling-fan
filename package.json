@@ -1,6 +1,6 @@
 {
   "name": "homebridge-ceiling-fan",
-  "version": "1.0.13",
+  "version": "1.0.15",
   "description": "Homebridge Ceiling Fan Accessory",
   "main": "index.js",
   "scripts": {
